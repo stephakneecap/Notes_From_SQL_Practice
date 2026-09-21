@@ -384,3 +384,44 @@
                 COUNT(DISTINCT subject_id) AS cnt
             FROM Teacher
             GROUP BY teacher_id;
+
+--23. 1141. User Activity for the Past 30 Days I
+
+            SELECT
+                activity_date as day
+                , COUNT(DISTINCT user_id) AS active_users
+            FROM Activity
+            WHERE 
+                activity_date > '2019-06-27' 
+                AND activity_date <= '2019-07-27'
+            GROUP BY
+                activity_date
+--24. 1070. Product Sales Analysis III
+
+            WITH cte as
+                (SELECT
+                    product_id
+                    , min(year) as first_year
+                FROM Sales
+                group by
+                    product_id)
+            
+            SELECT 
+                cte.product_id
+                , sales.year as first_year
+                , sales.quantity
+                , sales.price
+            FROM cte
+                left join Sales
+                    on sales.year = cte.first_year
+                    and sales.product_id = cte.product_id
+--25.
+
+----//An issue I had with this is the difference between having count(x) >5 and GROUP BY Y, having count(x) >5.
+----//The first statement asks if the entire table has at least 5 students. The second FIRST groups by y, and then asks which of those groups have at least 5 students.
+
+            select
+                class
+            from Courses
+            group by class
+            having count(student) >= 5
