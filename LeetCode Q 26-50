@@ -284,4 +284,141 @@
     GROUP BY
         visited_on
         , amount
-  
+
+--40. Number of Friends
+
+      SELECT
+          id
+          , count(id) as num
+      FROM
+          (SELECT
+              requester_id as id
+          FROM RequestAccepted
+          UNION ALL
+          SELECT
+              accepter_id as id
+          FROM RequestAccepted) as rship_finder
+      GROUP BY id
+      ORDER BY
+          num DESC
+      LIMIT 1
+
+--41.
+      SELECT
+          round(sum(tiv_2016), 2) as tiv_2016
+      FROM
+          Insurance
+      WHERE concat(lat, '-', lon) IN (
+              select
+                  concat(lat, '-', lon) 
+              FROM Insurance
+              GROUP BY concat(lat, '-', lon)
+              HAVING count(pid) = 1)
+      
+          AND tiv_2015 IN (
+              select
+                  tiv_2015
+              FROM Insurance
+              GROUP BY tiv_2015
+              HAVING count(*) > 1
+              )
+
+
+--42.
+
+      select
+          d.name as Department
+          , b.name as Employee
+          , b.salary as Salary
+      from(
+          select
+              *
+              , dense_rank() over
+                  (partition by departmentId
+                  order by salary desc) as rankings
+          from Employee
+      ) as b
+          join Department as d
+              on b.departmentId = d.id
+      WHERE rankings <=3
+
+43.
+      SELECT
+          user_id
+          , CONCAT(
+              UPPER(SUBSTRING(name, 1, 1)) #column, start pos, length
+              , LOWER(SUBSTRING(name, 2)) #length is dynamic so left blank
+          ) as name
+      FROM users
+      ORDER BY user_id
+
+44. Patients with Conditions
+
+      select
+          patient_id
+          , patient_name
+          , conditions
+      from Patients
+      where conditions LIKE 'DIAB1%'
+          OR conditions LIKE '% DIAB1%'
+
+45. Delete Duplicate emails
+
+      DELETE FROM Person
+      WHERE id NOT IN(
+          SELECT min_id
+          FROM (
+              SELECT MIN(id) as min_id
+              FROM Person
+              GROUP BY email
+              ) as sq
+          )
+
+46. Second Highest Salary
+
+      SELECT
+          IFNULL(
+              (   SELECT DISTINCT
+                      salary
+                  FROM Employee
+                  ORDER BY salary desc
+                  LIMIT 1 OFFSET 1
+              ),
+              NULL
+          ) as SecondHighestSalary
+
+47.
+
+      SELECT
+          sell_date
+          , count(DISTINCT product) as num_sold
+          , GROUP_CONCAT(DISTINCT product
+              ORDER BY product ASC
+              SEPARATOR ',') as products
+      FROM Activities 
+      GROUP BY sell_date
+      ORDER BY
+          sell_date asc
+
+49.
+
+      SELECT
+          p.product_name
+          , sum(o.unit) as unit
+      FROM Orders as o
+          left join Products as p
+              on o.product_id = p.product_id
+      WHERE order_date 
+              BETWEEN '2020-02-01'
+              AND '2020-02-29'
+      GROUP BY
+          o.product_id
+      HAVING sum(unit) >= 100
+
+50. 
+    select
+        user_id
+        , name
+        , mail
+    FROM Users
+    WHERE mail REGEXP '^[a-zA-Z][a-zA-Z0-9_.-]*(?-i)@leetcode[.]com$'
