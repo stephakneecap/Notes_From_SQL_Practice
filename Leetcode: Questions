@@ -1,0 +1,34 @@
+My favorite thing about subqueries so far has been the ability to use them to compare one value to a list of values
+---> 
+
+Questions I asked:
+
+how to pivot columns to rows in mysql?
+
+Can you nest aggregate functions?
+
+How to compare different rows of the same column together?
+
+Why do aggregates not work in where?
+
+Why do having always need a group by?
+
+To find top 3 unique values (aka, potentially more than 3)?
+  rank dense, comp?
+
+
+Refresher on Regex and String Functions
+
+        length -> returns numerical length
+        upper/lower -> returns the string in all uppercase or lowercase
+          combine with substring
+        
+        SUBSTRING -> Allows you to select a component of a string - position is required, length of substring is optional
+        
+        TRIM -> trims ONLY white spaces. automatically trims both sides, you can do LTRIM or RTRIM to only trim one side
+
+Why do you need to nest subqueries during a delete?
+
+How to concat multiple string rows under the same column?
+
+    group concat
