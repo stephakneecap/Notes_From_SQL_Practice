@@ -1,0 +1,48 @@
+--51.. Trips and Users
+
+      select
+          Day
+          , round(cancelled_trips/total_trips, 2) as 'Cancellation Rate'
+      from
+          (select
+              count(id) as total_trips
+              , sum(CASE when status != 'completed' then 1 else 0 end) as cancelled_trips
+              , request_at as Day
+          from trips
+          where client_id IN (
+              select
+                  users_id
+              from users
+              where banned = 'No'
+              )
+              AND driver_id IN (
+              select
+                  users_id
+              from users
+              where banned = 'No'
+              )
+          group by request_at) as sq
+      where Day >= '2013-10-01'
+        and Day <= '2013-10-03'
+
+--52. Human Traffic of Stadium
+
+      WITH CTE AS (
+          SELECT 
+              id,
+              visit_date,
+              people,
+              LAG(people, 2) OVER (ORDER BY id) AS lag2,
+              LAG(people, 1) OVER (ORDER BY id) AS lag1,
+              LEAD(people, 1) OVER (ORDER BY id) AS lead1,
+              LEAD(people, 2) OVER (ORDER BY id) AS lead2
+          FROM Stadium
+      )
+      SELECT id, visit_date, people
+      FROM CTE
+      WHERE people >= 100 AND (
+          (lag2 >= 100 AND lag1 >= 100) OR
+          (lag1 >= 100 AND lead1 >= 100) OR
+          (lead1 >= 100 AND lead2 >= 100)
+      )
+      ORDER BY visit_date ASC;
