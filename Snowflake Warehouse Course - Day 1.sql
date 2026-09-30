@@ -1,3 +1,5 @@
+--link for myself: https://training.snowflake.com/content-player/app/sf/play/rco/208216016?in_sessionid=A09J32043A115159&ctx_classroomId=98874317&ctx_in_from_module=CLMSBROWSEV2.PRMAIN&ctx_in_lp_id=0&ctx_in_filter=%20
+
 select 'hello!' as greeting;
 
 use schema garden_plants.veggies;
